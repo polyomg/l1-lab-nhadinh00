@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Detail</title>
+    <style>
+        body { font-family: Arial, sans-serif; width: 280px; }
+        h2 { margin-bottom: 10px; }
+        img { width: 150px; display: block; margin: 0 auto 10px auto; }
+        .line { border-top: 1px solid black; padding: 5px 0; }
+        .label { font-weight: normal; }
+        .value { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Kết quả hiển thị</h2>
+    <img th:src="@{/photos/{p}(p=${staff.photo})}" alt="photo"><br>
+
+    <div class="line"><span class="label">Email: </span>
+        <span class="value" th:text="${staff.id}"></span></div>
+
+    <div class="line"><span class="label">Họ và tên: </span>
+        <span class="value" th:text="${#strings.capitalizeWords(staff.fullname)}"></span></div>
+
+    <div class="line"><span class="label">Giới tính: </span>
+        <span class="value" th:text="${staff.gender ? 'Nam' : 'Nữ'}"></span></div>
+
+    <div class="line"><span class="label">Ngày sinh: </span>
+        <span class="value" th:text="${#dates.format(staff.birthday,'dd-MM-yyyy')}"></span></div>
+
+    <div class="line"><span class="label">Cấp bậc: </span>
+        <span class="value">
+            <span th:switch="${staff.level}">
+                <span th:case="0">Uỷ</span>
+                <span th:case="1">Tá</span>
+                <span th:case="2">Tướng</span>
+            </span>
+        </span>
+    </div>
+
+    <div class="line"><span class="label">Salary: </span>
+        <span class="value" th:text="${#numbers.formatDecimal(staff.salary,0,'COMMA',2,'POINT')}"></span></div>
+</body>
+</html>
