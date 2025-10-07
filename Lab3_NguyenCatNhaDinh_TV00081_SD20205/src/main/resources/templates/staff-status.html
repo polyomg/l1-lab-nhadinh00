@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 6px 10px;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .odd {
+            background-color: pink;
+        }
+        .even {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <thead>
+        <tr>
+            <th rowspan="2">HỌ VÀ TÊN</th>
+            <th colspan="6">GIÁ TRỊ CÁC THUỘC TÍNH TRẠNG THÁI</th>
+        </tr>
+        <tr>
+            <th>Index</th>
+            <th>Count</th>
+            <th>First</th>
+            <th>Last</th>
+            <th>Odd</th>
+            <th>Even</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="staff, st : ${list}"
+            th:class="${st.odd} ? 'odd' : 'even'">
+            <td th:text="${#strings.capitalizeWords(staff.fullname)}">Họ tên</td>
+            <td th:text="${st.index}">0</td>
+            <td th:text="${st.count}">1</td>
+            <td th:text="${st.first}">false</td>
+            <td th:text="${st.last}">false</td>
+            <td th:text="${st.odd}">true</td>
+            <td th:text="${st.even}">false</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
