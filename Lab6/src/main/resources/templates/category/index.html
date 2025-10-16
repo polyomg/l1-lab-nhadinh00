@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Category Management</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
+    input { margin-right: 8px; padding: 4px; }
+    button, a { margin-right: 8px; text-decoration: none; }
+    a { color: blue; }
+    h3 { color: #333; }
+</style>
+</head>
+<body>
+<h3>CATEGORY MANAGEMENT</h3>
+
+<th:block th:replace="~{category/form :: form}"></th:block>
+<hr>
+<th:block th:replace="~{category/table :: table}"></th:block>
+
+</body>
+</html>
