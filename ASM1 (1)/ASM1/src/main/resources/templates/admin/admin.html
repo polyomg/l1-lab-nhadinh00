@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <style>
+        /* Reset margin and padding for all elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Disable scrolling on the body */
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: #2f2f2f;
+            padding: 20px;
+            height: 100vh;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: hidden; /* Disable scrolling on the sidebar */
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+            letter-spacing: 1px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            background-color: #444;
+            transition: background-color 0.3s, transform 0.3s;
+            font-weight: bold;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #666;
+            transform: translateX(5px);
+        }
+
+        .sidebar .logout-button button {
+            width: 100%;
+            padding: 12px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar .logout-button button:hover {
+            background-color: #c82333;
+        }
+
+        /* Content Frame Styles */
+        .content-frame {
+            flex: 1;
+            width: calc(100% - 280px);
+            height: 100vh;
+            margin-left: 280px;
+            position: relative;
+            overflow: hidden; /* Disable scrolling on the content-frame itself */
+        }
+
+        iframe#contentFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block; /* Hiển thị iframe mặc định */
+            overflow-y: auto; /* Enable vertical scrolling only for the iframe content */
+            overflow-x: hidden; /* Disable horizontal scrolling for the iframe if not needed */
+        }
+
+        /* Background effect */
+        .content-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 123, 255, 0.08), rgba(0, 198, 255, 0.08));
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+            <h2 th:if="${staffRole == true}">Xin chào Admin, <span th:text="${staffName}"></span></h2>
+            <h2 th:if="${staffRole == false}">Xin chào nhân viên, <span th:text="${staffName}"></span></h2>
+            <ul>
+                <li><a href="#" onclick="loadPage('/users')">Quản lý người dùng</a></li>
+                <li><a href="#" onclick="loadPage('/admin/products')">Quản lý sản phẩm</a></li>
+                <li><a href="#" onclick="loadPage('/admin/loaisp')">Quản lý loại sản phẩm</a></li>
+                <li><a href="#" onclick="loadPage('/thongke')">Thống kê doanh thu</a></li>
+                <li><a href="#" onclick="loadPage('/thongke-taikhoan')">Thống kê tài khoản</a></li>
+                <li><a href="#" onclick="loadPage('/thongke-loai')">Thống kê loại sản phẩm</a></li>
+                <li><a href="/home" target="_blank">Mở trang chủ</a></li>
+            </ul>
+        </div>
+        <div class="logout-button">
+            <form th:action="@{/admin/logout}" method="post">
+                <button type="submit">Đăng xuất</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="content-frame">
+        <iframe id="contentFrame" src="/users"></iframe> <!-- Mặc định tải form Quản lý người dùng -->
+    </div>
+
+    <script>
+        function loadPage(endpoint) {
+            const iframe = document.getElementById('contentFrame');
+            iframe.src = endpoint;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thống kê doanh thu theo loại sản phẩm</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #FF5722;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        input[type="date"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #FF5722;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #E64A19;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .chart-container .chart {
+            width: 48%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .line-chart {
+            width: 100%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #FF5722;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .total-revenue {
+            text-align: center;
+            font-size: 1.5em;
+            color: #FF5722;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thống kê doanh thu theo loại sản phẩm</h1>
+
+    <form action="/thongke-loai" method="get">
+        <label for="startDate">Ngày bắt đầu:</label>
+        <input type="date" id="startDate" name="startDate" required>
+        <label for="endDate">Ngày kết thúc:</label>
+        <input type="date" id="endDate" name="endDate" required>
+        <button type="submit">Thống kê</button>
+    </form>
+
+    <div th:if="${doanhThuTheoLoai != null}">
+        <div class="chart-container">
+            <div class="chart">
+                <h2>Biểu đồ tròn doanh thu theo loại sản phẩm</h2>
+                <canvas id="doanhThuTheoLoaiPieChart"></canvas>
+            </div>
+            <div class="chart">
+                <h2>Biểu đồ cột doanh thu theo loại sản phẩm</h2>
+                <canvas id="doanhThuTheoLoaiBarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="line-chart">
+            <h2>Biểu đồ đường doanh thu theo loại sản phẩm</h2>
+            <canvas id="doanhThuTheoLoaiLineChart"></canvas>
+        </div>
+
+        <div class="total-revenue">
+            <h2>Tổng doanh thu: <span th:text="${tongDoanhThu}"></span></h2>
+        </div>
+
+        <h2>Bảng tổng kết doanh thu theo loại sản phẩm</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên loại sản phẩm</th>
+                    <th>Doanh thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${doanhThuTheoLoai}">
+                    <td th:text="${entry.key}"></td>
+                    <td th:text="${entry.value}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var doanhThuTheoLoai = /*[[${doanhThuTheoLoai}]]*/ {};
+
+        // Hàm tạo màu ngẫu nhiên
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Tạo mảng màu ngẫu nhiên cho từng loại sản phẩm
+        var colors = [];
+        for (var i = 0; i < Object.keys(doanhThuTheoLoai).length; i++) {
+            colors.push(getRandomColor());
+        }
+
+        // Biểu đồ đường doanh thu theo loại sản phẩm
+        var labelsLoai = Object.keys(doanhThuTheoLoai);
+        var dataLoai = Object.values(doanhThuTheoLoai);
+        var ctxLine = document.getElementById('doanhThuTheoLoaiLineChart').getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: labelsLoai,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: dataLoai,
+                    borderWidth: 1,
+                    borderColor: '#FF5722',
+                    backgroundColor: 'rgba(255, 87, 34, 0.2)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ cột doanh thu theo loại sản phẩm
+        var ctxBar = document.getElementById('doanhThuTheoLoaiBarChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: labelsLoai,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: dataLoai,
+                    borderWidth: 1,
+                    backgroundColor: colors,
+                    borderColor: colors.map(color => color.replace(/0.6\)$/, '1)'))
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ tròn doanh thu theo loại sản phẩm
+        var ctxPie = document.getElementById('doanhThuTheoLoaiPieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: labelsLoai,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: dataLoai,
+                    borderWidth: 1,
+                    backgroundColor: colors
+                }]
+            }
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 2 - Danh sách Staff</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .staff-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            width: 300px;
+        }
+        .staff-item img { height: 40px; margin-right: 10px; }
+        .separator {
+            border: none;
+            border-top: 1px solid black;
+            margin: 5px 0;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+<h2>Bài 2 - Danh sách Staff</h2>
+
+<div th:each="st, state : ${list}">
+    <div class="staff-item">
+        <img src="/photos/photo.jpg" alt="photo">
+        <b th:text="${state.count + '. ' + #strings.capitalizeWords(st.fullname)}"></b>,
+        <span th:text="'$' + ${#numbers.formatDecimal(st.salary, 0, 'COMMA', 2, 'POINT')}"></span>
+    </div>
+    <th:block th:if="${!state.last}">
+        <hr class="separator">
+    </th:block>
+</div>
+
+</body>
+</html>

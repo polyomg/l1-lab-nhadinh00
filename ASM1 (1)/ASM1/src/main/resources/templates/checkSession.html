@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kiểm tra Session</title>
+</head>
+<body>
+    <div th:if="${maKH != null}">
+        <p>Mã khách hàng trong session: <span th:text="${maKH}"></span></p>
+    </div>
+    <div th:unless="${maKH != null}">
+        <p>Mã khách hàng không tồn tại trong session.</p>
+    </div>
+</body>
+</html>

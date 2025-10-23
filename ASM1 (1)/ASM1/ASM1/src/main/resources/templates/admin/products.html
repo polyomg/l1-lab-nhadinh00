@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thêm loại sản phẩm</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff8fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .form-container {
+      background: #fff;
+      border: 2px solid #ffcce5;
+      border-radius: 12px;
+      padding: 25px 40px;
+      width: 400px;
+      box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: #e75480;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1.5px solid #ffcce5;
+      border-radius: 8px;
+      outline: none;
+      margin-top: 6px;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus {
+      border-color: #ff8cb3;
+      box-shadow: 0 0 5px rgba(255, 140, 179, 0.5);
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.3s;
+    }
+
+    .save-btn {
+      background-color: #ff8cb3;
+      color: white;
+    }
+
+    .save-btn:hover {
+      background-color: #ff6f9f;
+    }
+
+    .cancel-btn {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+
+    .cancel-btn:hover {
+      background-color: #c9c9c9;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Thêm loại sản phẩm</h2>
+    <form>
+      <label>Mã Loại:</label>
+      <input type="text" value="0" readonly>
+
+      <label>Tên Loại:</label>
+      <input type="text" placeholder="Nhập tên loại...">
+
+      <div class="button-group">
+        <button type="submit" class="save-btn">💾 Lưu</button>
+        <button type="button" class="cancel-btn">❌ Hủy</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<header th:fragment="header">
+    <div class="logo"></div>
+    <nav>
+        <ul>
+            <li><a th:href="@{/home}">Trang chủ</a></li>
+            <li><a th:href="@{/products}">Sản phẩm</a></li>
+            <li><a th:href="@{/buy-history}">Lịch sử mua hàng</a></li>
+            <li>
+                <form id="searchForm" th:action="@{/products/search}" method="get" class="search-form">
+                    <input type="text" name="keyword" id="searchInput" placeholder="Tìm kiếm sản phẩm..." />
+                    <button type="submit">Tìm kiếm</button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <div class="icons">
+        <a th:href="@{/profile}">
+            <dotlottie-player
+                src="https://lottie.host/1e05fd6c-1b09-4222-81a4-f55583b7ed3f/p18Y1lG1GW.lottie"
+                background="transparent"
+                speed="1"
+                style="width: 40px; height: 40px"
+                loop
+                autoplay
+            ></dotlottie-player>
+        </a>
+        <a th:href="@{/cart}">
+            <dotlottie-player
+                src="https://lottie.host/d18a1aa4-6204-4e5e-ba32-6b2ddbfc34bb/T7m0Uaxrqf.lottie"
+                background="transparent"
+                speed="1"
+                style="width: 40px; height: 40px"
+                loop
+                autoplay
+            ></dotlottie-player>
+        </a>
+    </div>
+
+    <style>
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, #ffd6e0, #ffe6f2);
+            padding: 15px 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(255, 182, 193, 0.3);
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            color: #8b5e83;
+            font-size: 22px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff69b4;
+        }
+
+        .icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 25px;
+            padding: 5px 10px;
+            box-shadow: 0 0 5px rgba(255, 192, 203, 0.4);
+        }
+
+        .search-form input {
+            border: none;
+            outline: none;
+            padding: 8px 12px;
+            font-size: 16px;
+            border-radius: 20px;
+            width: 180px;
+        }
+
+        .search-form button {
+            background-color: #ffb6c1;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .search-form button:hover {
+            background-color: #ff8fa3;
+        }
+    </style>
+</header>

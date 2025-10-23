@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý tài khoản</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffe6eb, #ffd9e0);
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4);
+      width: 420px;
+      padding: 40px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      color: #b44e72;
+      margin-bottom: 25px;
+      font-weight: 600;
+      text-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
+    }
+
+    #userInfo p {
+      margin-bottom: 12px;
+      color: #4a3f3f;
+      font-size: 15px;
+    }
+
+    #userInfo strong {
+      color: #b44e72;
+    }
+
+    label {
+      font-weight: 500;
+      color: #5a4b4b;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ffc0cb;
+      margin-bottom: 14px;
+      outline: none;
+      transition: 0.3s;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    input:focus {
+      border-color: #ff91a4;
+      box-shadow: 0 0 8px rgba(255, 145, 164, 0.4);
+    }
+
+    button {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #editBtn, #changePasswordBtn, #forgotPasswordBtn {
+      background: linear-gradient(135deg, #ffb6c1, #ff91a4);
+      color: white;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    #editBtn:hover,
+    #changePasswordBtn:hover,
+    #forgotPasswordBtn:hover {
+      background: linear-gradient(135deg, #ff91a4, #ff7ca2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+    }
+
+    #logoutBtn {
+      background: linear-gradient(135deg, #ff9ca5, #ff5c73);
+      color: white;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #logoutBtn:hover {
+      background: linear-gradient(135deg, #ff5c73, #ff3b5f);
+      transform: translateY(-2px);
+    }
+
+    .message, .error {
+      text-align: center;
+      font-weight: 500;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+
+    .message { color: #28a745; }
+    .error { color: #dc3545; }
+
+    #editForm button[type="submit"],
+    #cancelBtn {
+      width: 48%;
+    }
+
+    #editForm {
+      text-align: center;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 4%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thông tin tài khoản</h1>
+
+    <div th:if="${message}" class="message" th:text="${message}"></div>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    <!-- Thông tin tài khoản -->
+    <div id="userInfo" th:if="${customer != null}">
+      <p><strong>Tên đăng nhập:</strong> <span th:text="${customer.tenDN != null ? customer.tenDN : 'Chưa có'}"></span></p>
+      <p><strong>Email:</strong> <span th:text="${customer.email != null ? customer.email : 'Chưa có'}"></span></p>
+      <p><strong>Họ và tên:</strong> <span th:text="${customer.ten != null ? customer.ten : 'Chưa có'}"></span></p>
+      <p><strong>Số điện thoại:</strong> <span th:text="${customer.sdt != null ? customer.sdt : 'Chưa có'}"></span></p>
+      <button id="editBtn" onclick="showForm('editForm')">✏️ Chỉnh sửa</button>
+      <a th:href="@{/change-password}"><button id="changePasswordBtn">🔐 Đổi mật khẩu</button></a>
+      <a th:href="@{/forgot-password}"><button id="forgotPasswordBtn">❓ Quên mật khẩu</button></a>
+    </div>
+
+    <!-- Form chỉnh sửa -->
+    <form id="editForm" action="/update-profile" method="post" style="display: none;" th:if="${customer != null}">
+      <label for="editUsername">Tên đăng nhập:</label>
+      <input type="text" id="editUsername" name="tenDN" th:value="${customer.tenDN != null ? customer.tenDN : ''}">
+      <label for="editEmail">Email:</label>
+      <input type="email" id="editEmail" name="email" th:value="${customer.email != null ? customer.email : ''}">
+      <label for="editFullName">Họ và tên:</label>
+      <input type="text" id="editFullName" name="ten" th:value="${customer.ten != null ? customer.ten : ''}">
+      <label for="editPhone">Số điện thoại:</label>
+      <input type="tel" id="editPhone" name="sdt" th:value="${customer.sdt != null ? customer.sdt : ''}">
+      <div class="btn-group">
+        <button type="submit">💾 Lưu</button>
+        <button id="cancelBtn" type="button" onclick="hideForm('editForm')">❌ Hủy</button>
+      </div>
+    </form>
+
+    <form action="/logout" method="post">
+      <button id="logoutBtn">🚪 Đăng xuất</button>
+    </form>
+  </div>
+
+  <script>
+    function showForm(formId) {
+      document.getElementById('userInfo').style.display = 'none';
+      document.getElementById(formId).style.display = 'block';
+    }
+
+    function hideForm(formId) {
+      document.getElementById(formId).style.display = 'none';
+      document.getElementById('userInfo').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

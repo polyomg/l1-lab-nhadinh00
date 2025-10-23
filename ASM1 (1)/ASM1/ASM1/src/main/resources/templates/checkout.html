@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh Toán</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fff8fb;
+            padding: 30px;
+        }
+        .checkout-container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #ff4081;
+            text-align: center;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+        }
+        .total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff4081;
+            margin-top: 20px;
+        }
+        .confirm-btn {
+            display: block;
+            width: 100%;
+            background: #ff4081;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .confirm-btn:hover {
+            background: #e91e63;
+        }
+    </style>
+</head>
+<body>
+<div class="checkout-container">
+    <h2>Xác nhận Thanh Toán</h2>
+    <p><b>Khách hàng:</b> <span th:text="${customer.ten}"></span></p>
+
+    <div th:each="item : ${cartItems}" class="item">
+        <div>
+            <img th:src="@{'/images/' + ${item.hinhSP}}" alt="Ảnh sản phẩm">
+            <span th:text="${item.tenSP}"></span> (x<span th:text="${item.soLuong}"></span>)
+        </div>
+        <div>
+            <span th:text="${#numbers.formatInteger(item.tong, 0, 'POINT')} + '₫'"></span>
+        </div>
+    </div>
+
+    <div class="total">
+        Tổng cộng:
+        <span th:text="${#numbers.formatInteger(total, 0, 'POINT')} + '₫'"></span>
+    </div>
+
+    <form th:action="@{/confirm-checkout}" method="post">
+        <input type="hidden" name="maKH" th:value="${customer.maKH}">
+        <button type="submit" class="confirm-btn">Xác nhận Thanh Toán</button>
+    </form>
+</div>
+</body>
+</html>

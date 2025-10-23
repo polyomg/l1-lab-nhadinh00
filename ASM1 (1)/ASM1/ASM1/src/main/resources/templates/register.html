@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng Ký</title>
+	<style>
+	    body {
+	        font-family: 'Poppins', sans-serif;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	        height: 100vh;
+	        margin: 0;
+	        background: linear-gradient(135deg, #ffe6eb, #fff5f8); /* hồng pastel nhạt pha trắng */
+	    }
+
+	    .register-container {
+	        background-color: rgba(255, 255, 255, 0.9);
+	        padding: 35px;
+	        border-radius: 16px;
+	        box-shadow: 0 6px 15px rgba(255, 182, 193, 0.3); /* bóng hồng nhẹ */
+	        width: 800px;
+	        border: 1px solid #ffd6de;
+	        transition: transform 0.3s ease, box-shadow 0.3s ease;
+	    }
+
+	    .register-container:hover {
+	        transform: translateY(-4px);
+	        box-shadow: 0 8px 18px rgba(255, 182, 193, 0.5);
+	    }
+
+	    h2 {
+	        text-align: center;
+	        margin-bottom: 25px;
+	        color: #5a5a5a;
+	        font-size: 26px;
+	        font-weight: 700;
+	    }
+
+	    .form-row {
+	        display: flex;
+	        gap: 20px;
+	    }
+
+	    .form-column {
+	        flex: 1;
+	    }
+
+	    .form-group {
+	        margin-bottom: 20px;
+	    }
+
+	    .form-group label {
+	        display: block;
+	        margin-bottom: 8px;
+	        color: #555;
+	        font-weight: 500;
+	        font-size: 16px;
+	    }
+
+	    .form-group input, 
+	    .form-group select {
+	        width: 100%;
+	        padding: 12px;
+	        border: 1.5px solid #ffd1dc;
+	        border-radius: 8px;
+	        background-color: #fff;
+	        box-sizing: border-box;
+	        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	        font-size: 15px;
+	        color: #444;
+	    }
+
+	    .form-group input:focus, 
+	    .form-group select:focus {
+	        border-color: #ffb6c1;
+	        box-shadow: 0 0 8px rgba(255, 182, 193, 0.5);
+	        outline: none;
+	    }
+
+	    button {
+	        width: 100%;
+	        padding: 14px;
+	        background: linear-gradient(135deg, #ffb6c1, #ffc1cc);
+	        color: #fff;
+	        border: none;
+	        border-radius: 8px;
+	        cursor: pointer;
+	        transition: background 0.3s ease, transform 0.3s ease;
+	        font-size: 17px;
+	        font-weight: 600;
+	        letter-spacing: 0.5px;
+	        box-shadow: 0 4px 12px rgba(255, 182, 193, 0.4);
+	    }
+
+	    button:hover {
+	        background: linear-gradient(135deg, #ff99aa, #ffb6c1);
+	        transform: translateY(-2px);
+	    }
+
+	    .error-message {
+	        color: #d63031;
+	        margin-top: 10px;
+	        text-align: center;
+	        font-size: 16px;
+	        font-weight: 500;
+	    }
+	</style>
+
+</head>
+<body>
+<div class="register-container">
+    <h2>Đăng Ký</h2>
+    <form th:action="@{/register}" th:object="${customer}" method="post">
+        <div class="form-row">
+            <div class="form-column">
+                <div class="form-group">
+                    <label>Tên đăng nhập:</label>
+                    <input type="text" th:field="*{tenDN}" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu:</label>
+                    <input type="password" th:field="*{matKhau}" required>
+                </div>
+                <div class="form-group">
+                    <label>Tên khách hàng:</label>
+                    <input type="text" th:field="*{ten}" required>
+                </div>
+                <div class="form-group">
+                    <label>Giới tính:</label>
+                    <select th:field="*{gioiTinh}">
+                        <option value="true">Nam</option>
+                        <option value="false">Nữ</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-column">
+                <div class="form-group">
+                    <label>Ngày sinh:</label>
+                    <input type="date" th:field="*{ngaySinh}" required>
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại:</label>
+                    <input type="text" th:field="*{sdt}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" th:field="*{email}" required>
+                </div>
+                <div class="form-group">
+                    <label>Avatar:</label>
+                    <input type="text" th:field="*{avatar}" required>
+                </div>
+            </div>
+        </div>
+        <button type="submit">Đăng Ký</button>
+    </form>
+    <p th:if="${error}" style="color: red" th:text="${error}"></p>
+</div>
+</body>
+</html>

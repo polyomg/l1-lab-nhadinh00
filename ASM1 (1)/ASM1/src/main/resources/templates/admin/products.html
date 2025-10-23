@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sản phẩm</title>
+</head>
+<body>
+    <h2>Danh sách sản phẩm</h2>
+    <a href="/admin/products/add">Thêm sản phẩm</a>
+    <table border="1">
+        <tr>
+            <th>Mã SP</th>
+            <th>Tên SP</th>
+            <th>Giá</th>
+            <th>Loại SP</th>
+            <th>Hành động</th>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.maSP}"></td>
+            <td th:text="${product.tenSP}"></td>
+            <td th:text="${product.giaSP}"></td>
+            <td th:text="${product.loaiSP.maLoai}"></td>
+            <td>
+                <a th:href="@{/admin/products/edit/{id}(id=${product.maSP})}">Sửa</a> |
+                <a th:href="@{/admin/products/delete/{id}(id=${product.maSP})}" onclick="return confirm('Xóa sản phẩm?');">Xóa</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
