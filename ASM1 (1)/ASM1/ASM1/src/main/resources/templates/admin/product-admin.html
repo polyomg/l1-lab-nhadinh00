@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌸 Quản lý Sản phẩm</title>
+  <style>
+	* {
+	  margin: 0;
+	  padding: 0;
+	  box-sizing: border-box;
+	}
+	body {
+	  font-family: 'Poppins', sans-serif;
+	  background: linear-gradient(135deg, #fff0f5 0%, #fde2e4 100%);
+	  min-height: 100vh;
+	  color: #333;
+	  display: flex;
+	  justify-content: center;
+	  align-items: flex-start;
+	  padding: 50px 20px;
+	}
+	.container {
+	  width: 95%;
+	  max-width: 1250px;
+	  background: rgba(255, 255, 255, 0.95);
+	  border-radius: 20px;
+	  padding: 50px 70px;
+	  box-shadow: 0 10px 40px rgba(255, 192, 203, 0.35);
+	  backdrop-filter: blur(10px);
+	  border: 1px solid rgba(255, 182, 193, 0.3);
+	}
+	h2 {
+	  text-align: center;
+	  color: #d63384;
+	  font-size: 2.2rem;
+	  margin-bottom: 40px;
+	  letter-spacing: 0.5px;
+	}
+	form {
+	  background: rgba(255, 255, 255, 0.95);
+	  border-radius: 14px;
+	  padding: 30px 35px;
+	  margin-bottom: 40px;
+	  box-shadow: 0 4px 20px rgba(255, 182, 193, 0.25);
+	  border: 1px solid rgba(255, 182, 193, 0.25);
+	}
+	label {
+	  display: block;
+	  font-weight: 600;
+	  color: #555;
+	  margin-bottom: 8px;
+	}
+	input[type="text"], input[type="number"], input[type="file"], select, textarea {
+	  width: 100%;
+	  padding: 12px 14px;
+	  margin-bottom: 18px;
+	  border: 1px solid #f2cdda;
+	  border-radius: 10px;
+	  outline: none;
+	  background: #fffafc;
+	  transition: 0.3s;
+	}
+	input:focus, select:focus, textarea:focus {
+	  border-color: #ff80ab;
+	  box-shadow: 0 0 6px rgba(255, 128, 171, 0.4);
+	}
+	button, .btn, .search-container a {
+	  background-color: #ff80ab;
+	  color: white;
+	  border: none;
+	  border-radius: 12px;
+	  padding: 12px 22px;
+	  cursor: pointer;
+	  font-weight: 600;
+	  transition: 0.3s;
+	  box-shadow: 0 4px 10px rgba(255, 128, 171, 0.3);
+	  text-decoration: none;
+	  display: inline-block;
+	  text-align: center;
+	}
+	.btn {
+	  display: inline-flex;
+	  align-items: center;
+	  justify-content: center;
+	  gap: 5px;
+	  padding: 4px 10px;
+	  font-size: 0.85rem;
+	  font-weight: 500;
+	  border: none;
+	  border-radius: 6px;
+	  cursor: pointer;
+	  transition: 0.25s;
+	  text-decoration: none;
+	  color: white;
+	}
+	.btn-primary { background-color: #6f42c1; }
+	.btn-primary:hover { background-color: #5a32a3; transform: translateY(-1px); }
+	.btn-danger { background-color: #ff4d4d; }
+	.btn-danger:hover { background-color: #e60026; transform: translateY(-1px); }
+	.action-buttons {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 6px;
+	  align-items: flex-start;
+	}
+	.product-table-container {
+	  background: white;
+	  padding: 18px 25px;
+	  border-radius: 14px;
+	  border: 1px solid rgba(255, 182, 193, 0.4);
+	  box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+	}
+	td, th { line-height: 1.4; }
+	.search-container {
+	  display: flex;
+	  gap: 10px;
+	  margin-bottom: 25px;
+	}
+	.search-container input[type="text"] {
+	  flex: 1;
+	  padding: 10px 14px;
+	  border-radius: 10px;
+	  border: 1px solid #f2cdda;
+	  background-color: #fffafc;
+	  outline: none;
+	  transition: 0.3s;
+	}
+	.search-container input[type="text"]:focus {
+	  border-color: #ff80ab;
+	  box-shadow: 0 0 4px rgba(255, 128, 171, 0.4);
+	}
+	table {
+	  width: 100%;
+	  border-collapse: collapse;
+	  border-radius: 12px;
+	  overflow: hidden;
+	  background: #fff;
+	  box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+	}
+	th, td {
+	  padding: 14px 16px;
+	  text-align: left;
+	  border-bottom: 1px solid #fce4ec;
+	}
+	th {
+	  background-color: #ffb6c1;
+	  color: white;
+	  font-weight: 700;
+	  text-transform: uppercase;
+	  font-size: 14px;
+	  letter-spacing: 0.3px;
+	}
+	tr:hover { background-color: #fff0f5; }
+	img {
+	  border-radius: 8px;
+	  width: 60px;
+	  height: auto;
+	  border: 1px solid #f8bbd0;
+	}
+	.pagination {
+	  display: flex;
+	  justify-content: center;
+	  gap: 10px;
+	  margin-top: 35px;
+	}
+	.pagination a {
+	  padding: 8px 14px;
+	  background-color: #ffe6f2;
+	  border-radius: 10px;
+	  color: #d63384;
+	  text-decoration: none;
+	  transition: 0.3s;
+	  font-weight: 500;
+	}
+	.pagination a:hover, .pagination .active {
+	  background-color: #ff80ab;
+	  color: #fff;
+	}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🌸 Quản lý Sản phẩm 🌸</h2>
+
+    <!-- FORM -->
+    <form th:action="@{/admin/products/save}" method="post" th:object="${product}" enctype="multipart/form-data">
+      <input type="hidden" th:field="*{maSP}" />
+
+      <label>Tên sản phẩm:</label>
+      <input type="text" th:field="*{tenSP}" required />
+
+      <label>Giá sản phẩm:</label>
+      <input type="number" th:field="*{giaSP}" required />
+
+      <label>Loại sản phẩm:</label>
+      <select th:field="*{loaiSP.maLoai}">
+        <option th:each="loai : ${loaiSPs}" th:value="${loai.maLoai}" th:text="${loai.tenLoai}"></option>
+      </select>
+
+      <label>Hình ảnh sản phẩm:</label>
+      <input type="file" name="fileHinhSP" accept="image/*" />
+
+      <label>Hình nền sản phẩm:</label>
+      <input type="file" name="fileHinhNenSP" accept="image/*" />
+
+      <label>Số lượng sản phẩm:</label>
+      <input type="number" th:field="*{soLuong}" required />
+
+      <label>Chi tiết sản phẩm:</label>
+      <textarea th:field="*{chiTietSP}" rows="4"></textarea>
+
+      <button type="submit" class="btn-success">💾 Lưu sản phẩm</button>
+    </form>
+
+    <!-- TÌM KIẾM -->
+    <div class="search-container">
+      <form th:action="@{/admin/products}" method="get">
+        <input type="text" name="keyword" placeholder="🔍 Tìm theo tên hoặc mã sản phẩm" />
+        <button type="submit">Tìm</button>
+        <a href="/admin/products" class="btn-success">Làm mới</a>
+      </form>
+    </div>
+
+    <!-- BẢNG -->
+    <table>
+      <thead>
+        <tr>
+          <th>Mã SP</th>
+          <th>Tên SP</th>
+          <th>Giá</th>
+          <th>Loại SP</th>
+          <th>Số lượng</th>
+          <th>Hình</th>
+          <th>Chi tiết</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="sp : ${products}">
+          <td th:text="${sp.maSP}"></td>
+          <td th:text="${sp.tenSP}"></td>
+          <td th:text="${sp.giaSP}"></td>
+          <td th:text="${sp.loaiSP.tenLoai}"></td>
+          <td th:text="${sp.soLuong}"></td>
+          <td><img th:src="${sp.hinhSP}" alt="Hình SP"></td>
+          <td th:text="${sp.chiTietSP}"></td>
+          <td>
+            <a th:href="@{/admin/products/edit/{id}(id=${sp.maSP})}" class="btn btn-primary">✏️ Sửa</a>
+            <a th:href="@{/admin/products/delete/{id}(id=${sp.maSP})}" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?');">🗑️ Xóa</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- PHÂN TRANG (TƯƠNG THÍCH MỌI PHIÊN BẢN THYMELEAF) -->
+<div class="pagination">
+  <a th:if="${currentPage > 0}" th:href="@{/admin/products(page=${currentPage - 1}, keyword=${keyword})}">« Trước</a>
+
+  <th:block th:if="${totalPages != null}">
+    <a th:each="i : ${#numbers.sequence(0, totalPages > 0 ? totalPages - 1 : 0)}"
+       th:classappend="${i == currentPage} ? 'active'"
+       th:href="@{/admin/products(page=${i}, keyword=${keyword})}"
+       th:text="${i + 1}"></a>
+  </th:block>
+
+  <a th:if="${totalPages != null and currentPage < totalPages - 1}"
+     th:href="@{/admin/products(page=${currentPage + 1}, keyword=${keyword})}">Sau »</a>
+</div>
+
+      <a th:if="${currentPage > 0}" th:href="@{/admin/products(page=${currentPage - 1}, keyword=${keyword})}">« Trước</a>
+      <span th:if="${totalPages != null}">
+        <a th:each="i : ${#numbers.sequence(0, (totalPages != null ? totalPages - 1 : 0))}"
+           th:classappend="${i == currentPage} ? 'active'"
+           th:href="@{/admin/products(page=${i}, keyword=${keyword})}"
+           th:text="${i + 1}"></a>
+      </span>
+      <a th:if="${currentPage < ((totalPages != null ? totalPages : 1) - 1)}"
+         th:href="@{/admin/products(page=${currentPage + 1}, keyword=${keyword})}">Sau »</a>
+    </div>
+  </div>
+</body>
+</html>

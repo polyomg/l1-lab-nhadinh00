@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product List</title>
+	<style>
+	    body {
+	        background: no-repeat center center;
+	        background-color: #ffeef5; /* hồng pastel nhạt */
+	        background-size: cover;
+	        min-height: 100vh;
+	        display: flex;
+	        align-items: center;
+	        justify-content: center;
+	        font-family: "Poppins", sans-serif;
+	        overflow: hidden;
+	        transition: background 0.5s ease-in-out;
+	    }
+
+	    .container {
+	        background: rgba(255, 255, 255, 0.3);
+	        backdrop-filter: blur(15px);
+	        padding: 40px;
+	        border-radius: 25px;
+	        box-shadow: 0 6px 20px rgba(255, 182, 193, 0.4);
+	        width: 85%;
+	        max-width: 2000px;
+	        display: flex;
+	        flex-direction: column;
+	        transition: opacity 0.8s ease-in-out;
+	    }
+
+	    header {
+	        display: flex;
+	        justify-content: space-between;
+	        align-items: center;
+	        margin-bottom: 20px;
+	        background: linear-gradient(to right, #ffd6e8, #ffeaf2);
+	        padding: 15px 25px;
+	        border-radius: 15px;
+	        box-shadow: 0 3px 10px rgba(255, 182, 193, 0.3);
+	    }
+
+	    nav ul {
+	        display: flex;
+	        gap: 20px;
+	        list-style: none;
+	        padding: 0;
+	        margin: 0;
+	    }
+
+	    nav a {
+	        color: #8a285f;
+	        font-size: 25px;
+	        font-weight: 500;
+	        text-decoration: none;
+	    }
+
+	    nav a:hover {
+	        color: #ff4fa3;
+	    }
+
+	    .icons {
+	        display: flex;
+	        align-items: center;
+	        gap: 10px;
+	        color: #8a285f;
+	    }
+
+	    main {
+	        display: grid;
+	        grid-template-columns: repeat(3, 1fr);
+	        gap: 25px;
+	        justify-content: center;
+	        max-height: 700px;
+	        overflow-y: auto;
+	        padding: 20px;
+	    }
+
+	    main::-webkit-scrollbar {
+	        display: none;
+	    }
+
+	    .product-card {
+	        background: rgba(255, 255, 255, 0.5);
+	        backdrop-filter: blur(10px);
+	        border-radius: 20px;
+	        box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3);
+	        padding: 20px;
+	        text-align: center;
+	        transition: transform 0.3s ease, box-shadow 0.3s ease;
+	        position: relative;
+	        overflow: hidden;
+	        cursor: pointer;
+	    }
+
+	    .product-card:hover {
+	        transform: scale(1.05);
+	        box-shadow: 0 6px 15px rgba(255, 105, 180, 0.4);
+	    }
+
+	    .product-image-container {
+	        position: relative;
+	        width: 100%;
+	        height: 230px;
+	        border-radius: 15px;
+	        overflow: hidden;
+	        display: flex;
+	        align-items: center;
+	        justify-content: center;
+	    }
+
+	    .product-bg {
+	        position: absolute;
+	        width: 100%;
+	        height: 100%;
+	        background-size: cover;
+	        background-position: center;
+	        filter: blur(15px);
+	        opacity: 0.4;
+	        z-index: 0;
+	    }
+
+	    .product-image-container img {
+	        position: relative;
+	        z-index: 1;
+	        max-width: 60%;
+	        max-height: 100%;
+	        object-fit: contain;
+	    }
+
+	    .product-card h2 {
+	        font-size: 24px;
+	        color: #b31d6a;
+	        margin: 15px 0 10px;
+	    }
+
+	    .product-card p {
+	        font-size: 16px;
+	        color: #5c1d44;
+	        margin-bottom: 15px;
+	    }
+
+	    .product-card button {
+	        padding: 10px 25px;
+	        font-size: 16px;
+	        background-color: #ff69b4;
+	        color: white;
+	        border: none;
+	        border-radius: 10px;
+	        cursor: pointer;
+	        transition: 0.2s;
+	    }
+
+	    .product-card button:hover {
+	        background-color: #ff4fa3;
+	    }
+
+	    @media (max-width: 1024px) {
+	        main {
+	            grid-template-columns: repeat(2, 1fr);
+	        }
+	    }
+
+	    @media (max-width: 600px) {
+	        main {
+	            grid-template-columns: repeat(1, 1fr);
+	        }
+	    }
+
+	    /* Modal CSS */
+	    .modal {
+	        display: none;
+	        position: fixed;
+	        top: 0;
+	        left: 0;
+	        width: 100%;
+	        height: 100%;
+	        background-color: rgba(255, 192, 203, 0.3);
+	        justify-content: center;
+	        align-items: center;
+	        z-index: 1000;
+	    }
+
+	    .modal-content {
+	        background-color: #fff;
+	        padding: 25px;
+	        border-radius: 15px;
+	        box-shadow: 0 6px 15px rgba(255, 182, 193, 0.4);
+	        text-align: center;
+	        width: 320px;
+	        position: relative;
+	    }
+
+	    .close-button {
+	        position: absolute;
+	        top: 10px;
+	        right: 15px;
+	        font-size: 22px;
+	        cursor: pointer;
+	        color: #d63384;
+	    }
+
+	    .close-button:hover {
+	        color: #ff4fa3;
+	    }
+
+	    .close-modal-button {
+	        background-color: #ff80c0;
+	        color: white;
+	        border: none;
+	        padding: 10px 25px;
+	        border-radius: 8px;
+	        cursor: pointer;
+	        margin-top: 20px;
+	    }
+
+	    .close-modal-button:hover {
+	        background-color: #ff66b3;
+	    }
+
+	    .filter-options {
+	        display: flex;
+	        justify-content: space-between;
+	        margin-bottom: 25px;
+	        flex-wrap: wrap;
+	        gap: 10px;
+	    }
+
+	    .filter-price input {
+	        padding: 8px;
+	        margin-right: 5px;
+	        border-radius: 8px;
+	        border: 1px solid #f8c6d8;
+	        background-color: #fff6fa;
+	    }
+
+	    .filter-price button, .filter-category button {
+	        padding: 8px 15px;
+	        background-color: #ff69b4;
+	        color: white;
+	        border: none;
+	        border-radius: 8px;
+	        cursor: pointer;
+	        transition: 0.2s;
+	    }
+
+	    .filter-price button:hover, .filter-category button:hover {
+	        background-color: #ff4fa3;
+	    }
+
+	    .filter-category ul {
+	        display: none;
+	        position: absolute;
+	        background-color: #fff;
+	        border: 1px solid #f8c6d8;
+	        list-style: none;
+	        padding: 0;
+	        margin: 0;
+	        width: 160px;
+	        border-radius: 8px;
+	        box-shadow: 0 3px 10px rgba(255, 182, 193, 0.3);
+	    }
+
+	    .filter-category ul.show {
+	        display: block;
+	    }
+
+	    .filter-category ul li {
+	        padding: 10px;
+	        cursor: pointer;
+	        color: #8a285f;
+	    }
+
+	    .filter-category ul li:hover {
+	        background-color: #ffeaf2;
+	    }
+
+	    .selected-category {
+	        font-weight: bold;
+	        color: #d63384;
+	    }
+	</style>
+</head>
+<body>
+    <div class="container">
+        <div th:replace="fragments/header :: header"></div>
+        <div class="filter-options">
+    <div class="filter-price">
+        <input type="number" id="minPrice" placeholder="Giá Min" th:value="${minPrice}" />
+        <input type="number" id="maxPrice" placeholder="Giá Max" th:value="${maxPrice}" />
+        <button onclick="filterByPrice()">Lọc Giá</button>
+        <button onclick="resetPriceFilter()" style="background-color: #ff9800; margin-left: 5px;">Làm mới</button>
+    </div>
+    <div class="filter-category">
+        <button onclick="toggleCategoryList()">
+            <span id="selectedCategoryText" th:text="${selectedCategory != null ? selectedCategory : 'Tất cả'}">Tất cả</span>
+        </button>
+        <ul id="categoryList">
+            <li data-category-id="-1" onclick="filterByCategory(this)" th:classappend="${selectedCategory == null ? 'selected-category' : ''}">Tất cả</li>
+            <li th:each="category : ${categories}" 
+                th:data-category-id="${category.maLoai}" 
+                th:text="${category.tenLoai}" 
+                th:classappend="${selectedCategory == category.tenLoai ? 'selected-category' : ''}" 
+                onclick="filterByCategory(this)"></li>
+        </ul>
+    </div>
+</div>
+        <main>
+            <div th:each="product : ${products}" class="product-card" data-ma-sp="${product.maSP}">
+                <div class="product-image-container">
+                    <div class="product-bg" th:style="'background-image: url(' + ${product.hinhNenSP} + ');'"></div>
+                    <img th:src="${product.hinhSP}" th:alt="${product.tenSP}" />
+                </div>
+                <h2 th:text="${product.tenSP}"></h2>
+                <p th:text="'Giá: ' + ${product.giaSP} + ' VND'"></p>
+                <p th:text="${product.chiTietSP}"></p>
+                <form th:action="@{/add-to-cart}" method="post" class="add-to-cart-form">
+                    <input type="hidden" name="maKH" th:value="${currentCustomer?.maKH}" />
+                    <input type="hidden" name="maSP" th:value="${product.maSP}" />
+                    <input type="hidden" name="tenSP" th:value="${product.tenSP}" />
+                    <input type="hidden" name="hinhSP" th:value="${product.hinhSP}" />
+                    <input type="hidden" name="size" value="M" />
+                    <input type="hidden" name="soLuong" value="1" />
+                    <input type="hidden" name="giaSP" th:value="${product.giaSP}" />
+                    <button type="submit">Add to Cart</button>
+                </form>
+                <a th:href="@{/products/detail/{maSP}(maSP=${product.maSP})}" class="view-detail-link"></a>
+            </div>
+        </main>
+    </div>
+
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <p id="modalMessage"></p>
+            <button class="close-modal-button">Đóng</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const productCards = document.querySelectorAll(".product-card");
+        const body = document.body;
+        const defaultBackground = "url('/img/background.png')";
+
+        function changeBackground(imageUrl) {
+            body.style.backgroundImage = imageUrl;
+        }
+
+        function restoreDefaultBackground() {
+            body.style.backgroundImage = defaultBackground;
+        }
+
+        productCards.forEach((card) => {
+            const productBg = card.querySelector(".product-bg");
+
+            card.addEventListener("mouseenter", () => {
+                const bgImage = productBg.style.backgroundImage;
+                changeBackground(bgImage);
+            });
+
+            card.addEventListener("mouseleave", () => {
+                restoreDefaultBackground();
+            });
+
+            const viewDetailLink = card.querySelector(".view-detail-link");
+            if (viewDetailLink) {
+                card.addEventListener("click", function (event) {
+                    if (event.target.tagName === 'BUTTON' || event.target.tagName === 'FORM') {
+                        return;
+                    }
+                    window.location.href = viewDetailLink.href;
+                });
+            }
+        });
+
+        body.style.backgroundImage = defaultBackground;
+        body.style.transition = "background 0.5s ease-in-out";
+
+        const modal = document.getElementById("notificationModal");
+        const modalMessage = document.getElementById("modalMessage");
+        const closeButton = document.querySelector(".close-button");
+        const closeModalButton = document.querySelector(".close-modal-button");
+
+        function showModal(message) {
+            modalMessage.textContent = message;
+            modal.style.display = "flex";
+        }
+
+        function hideModal() {
+            modal.style.display = "none";
+        }
+
+        closeButton.addEventListener("click", hideModal);
+        closeModalButton.addEventListener("click", hideModal);
+
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                hideModal();
+            }
+        });
+
+        const message = "[[${message}]]";
+        if (message && message !== "null") {
+            showModal(message);
+        }
+
+        const addToCartForms = document.querySelectorAll(".add-to-cart-form");
+        addToCartForms.forEach((form) => {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const maKH = formData.get("maKH");
+
+                if (!maKH) {
+                    showModal("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
+                    return;
+                }
+
+                fetch(form.action, {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            showModal("Sản phẩm đã được thêm vào giỏ hàng!");
+                        } else {
+                            showModal("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        showModal("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.");
+                    });
+            });
+        });
+    });
+
+    function toggleCategoryList() {
+        document.getElementById("categoryList").classList.toggle("show");
+    }
+
+    function filterByCategory(element) {
+        const categoryId = element.getAttribute("data-category-id");
+        const minPrice = document.getElementById("minPrice").value || 0;
+        const maxPrice = document.getElementById("maxPrice").value || 2147483647;
+        let url = `/products/category/${categoryId}?minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        if (categoryId === "-1") {
+            url = `/products?minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        }
+        window.location.href = url;
+        document.getElementById("categoryList").classList.remove("show");
+    }
+
+    function filterByPrice() {
+        const minPrice = document.getElementById("minPrice").value || 0;
+        const maxPrice = document.getElementById("maxPrice").value || 2147483647;
+        const selectedCategoryElement = document.querySelector(".selected-category");
+        const categoryId = selectedCategoryElement ? selectedCategoryElement.getAttribute("data-category-id") : -1;
+        const url = `/products/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&categoryId=${categoryId}`;
+        window.location.href = url;
+    }
+
+    function resetPriceFilter() {
+        const selectedCategoryElement = document.querySelector(".selected-category");
+        const categoryId = selectedCategoryElement ? selectedCategoryElement.getAttribute("data-category-id") : -1;
+        let url = "/products";
+        if (categoryId !== "-1") {
+            url = `/products/category/${categoryId}`;
+        }
+        // Xóa giá trị trong input
+        document.getElementById("minPrice").value = "";
+        document.getElementById("maxPrice").value = "";
+        window.location.href = url;
+    }
+</script>
+</body>
+</html>

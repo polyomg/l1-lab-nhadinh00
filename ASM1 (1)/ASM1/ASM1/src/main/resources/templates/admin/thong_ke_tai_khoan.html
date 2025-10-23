@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Phân tích tăng trưởng tài khoản đăng ký</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffeef7, #ffffff);
+      color: #444;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #e91e63;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+      margin-bottom: 25px;
+    }
+
+    .chart-card {
+      width: 85%;
+      max-width: 1000px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(233, 30, 99, 0.15);
+      padding: 30px 40px;
+      transition: all 0.3s ease;
+    }
+
+    .chart-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(233, 30, 99, 0.25);
+    }
+
+    canvas {
+      width: 100%;
+      height: 400px;
+    }
+
+    .summary {
+      margin-top: 25px;
+      font-size: 1.2rem;
+      text-align: center;
+      color: #e91e63;
+      font-weight: 600;
+      background: rgba(233, 30, 99, 0.1);
+      padding: 12px 20px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <h1>📈 Phân tích tăng trưởng tài khoản đăng ký</h1>
+  <div class="chart-card">
+    <canvas id="taiKhoanChart"></canvas>
+  </div>
+  <div class="summary" id="tongTaiKhoanText"></div>
+
+  <script>
+    const thongKeTaiKhoanTheoNgay = [
+      { ngayDangKy: '2025-10-10', soLuong: 12 },
+      { ngayDangKy: '2025-10-11', soLuong: 18 },
+      { ngayDangKy: '2025-10-12', soLuong: 9 },
+      { ngayDangKy: '2025-10-13', soLuong: 21 },
+      { ngayDangKy: '2025-10-14', soLuong: 15 },
+      { ngayDangKy: '2025-10-15', soLuong: 27 },
+      { ngayDangKy: '2025-10-16', soLuong: 19 },
+      { ngayDangKy: '2025-10-17', soLuong: 23 },
+      { ngayDangKy: '2025-10-18', soLuong: 30 },
+      { ngayDangKy: '2025-10-19', soLuong: 24 }
+    ];
+
+    const tong = thongKeTaiKhoanTheoNgay.reduce((a, b) => a + b.soLuong, 0);
+    const avg = tong / thongKeTaiKhoanTheoNgay.length;
+    document.getElementById('tongTaiKhoanText').innerHTML =
+      `Tổng đăng ký: <strong>${tong}</strong> | Trung bình: <strong>${avg.toFixed(1)}</strong> / ngày`;
+
+    const labels = thongKeTaiKhoanTheoNgay.map(x => x.ngayDangKy);
+    const data = thongKeTaiKhoanTheoNgay.map(x => x.soLuong);
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+
+    const pointColors = data.map(v => {
+      if (v === max) return '#4CAF50'; // xanh đỉnh
+      if (v === min) return '#F44336'; // đỏ đáy
+      return '#EC407A'; // hồng pastel
+    });
+
+    new Chart(document.getElementById('taiKhoanChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Số tài khoản đăng ký mỗi ngày',
+            data,
+            borderColor: '#e91e63',
+            backgroundColor: 'rgba(233,30,99,0.15)',
+            tension: 0.3,
+            fill: true,
+            pointBackgroundColor: pointColors,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+          },
+          {
+            label: 'Mức trung bình',
+            data: Array(labels.length).fill(avg),
+            borderColor: '#9e9e9e',
+            borderDash: [6, 4],
+            fill: false,
+            pointRadius: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: {
+            display: true,
+            text: 'Thống kê & phân tích xu hướng đăng ký người dùng',
+            color: '#333',
+            font: { size: 16, weight: 'bold' }
+          },
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#e91e63',
+            bodyColor: '#333',
+            borderColor: '#e91e63',
+            borderWidth: 1,
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} tài khoản`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#fce4ec' },
+            title: { display: true, text: 'Số lượng (SL)' }
+          },
+          x: {
+            grid: { color: '#fce4ec' },
+            title: { display: true, text: 'Ngày đăng ký' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

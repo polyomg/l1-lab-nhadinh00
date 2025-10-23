@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý tài khoản</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(to bottom right, #ffd6e0, #ffe6f2);
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(255, 182, 193, 0.4);
+      width: 420px;
+      transition: 0.3s;
+    }
+
+    .container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(255, 182, 193, 0.5);
+    }
+
+    h1 {
+      text-align: center;
+      color: #d63384;
+      margin-bottom: 20px;
+    }
+
+    #userInfo p {
+      margin-bottom: 10px;
+      color: #444;
+      font-size: 16px;
+    }
+
+    #editForm label, #changePasswordForm label, #forgotPasswordForm label {
+      display: block;
+      margin-bottom: 6px;
+      color: #8b5e83;
+      font-weight: 600;
+    }
+
+    #editForm input, #changePasswordForm input, #forgotPasswordForm input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #f7c6d1;
+      border-radius: 10px;
+      background-color: #fff7fa;
+      box-sizing: border-box;
+      transition: 0.2s;
+    }
+
+    #editForm input:focus, #changePasswordForm input:focus, #forgotPasswordForm input:focus {
+      border-color: #ff9ebb;
+      box-shadow: 0 0 5px rgba(255, 155, 182, 0.6);
+      outline: none;
+    }
+
+    button {
+      background-color: #ffb6c1;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-right: 10px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff8fa3;
+      transform: scale(1.05);
+    }
+
+    button#logoutBtn {
+      background-color: #f06292;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button#logoutBtn:hover {
+      background-color: #e91e63;
+    }
+
+    .message {
+      color: #28a745;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .error {
+      color: #e74c3c;
+      text-align: center;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌷 Quản lý tài khoản 🌷</h1>
+
+    <div th:if="${message}" class="message" th:text="${message}"></div>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    <div id="userInfo">
+      <p><strong>Tên đăng nhập:</strong> <span th:text="${customer.tenDN}"></span></p>
+      <p><strong>Email:</strong> <span th:text="${customer.email}"></span></p>
+      <p><strong>Họ và tên:</strong> <span th:text="${customer.ten}"></span></p>
+      <p><strong>Số điện thoại:</strong> <span th:text="${customer.sdt}"></span></p>
+      <button id="editBtn" onclick="showForm('editForm')">✏️ Chỉnh sửa</button>
+      <button id="changePasswordBtn" onclick="showForm('changePasswordForm')">🔐 Đổi mật khẩu</button>
+      <button id="forgotPasswordBtn" onclick="showForm('forgotPasswordForm')">❓ Quên mật khẩu</button>
+    </div>
+
+    <form id="editForm" action="/update-profile" method="post" style="display: none;">
+      <label for="editUsername">Tên đăng nhập:</label>
+      <input type="text" id="editUsername" name="tenDN" th:value="${customer.tenDN}">
+      <label for="editEmail">Email:</label>
+      <input type="email" id="editEmail" name="email" th:value="${customer.email}">
+      <label for="editFullName">Họ và tên:</label>
+      <input type="text" id="editFullName" name="ten" th:value="${customer.ten}">
+      <label for="editPhone">Số điện thoại:</label>
+      <input type="tel" id="editPhone" name="sdt" th:value="${customer.sdt}">
+      <button id="saveBtn">💾 Lưu</button>
+      <button id="cancelBtn" type="button" onclick="hideForm('editForm')">❌ Hủy</button>
+    </form>
+
+    <form id="changePasswordForm" action="/change-password" method="post" style="display: none;">
+      <label for="oldPassword">Mật khẩu cũ:</label>
+      <input type="password" id="oldPassword" name="oldPassword">
+      <label for="newPassword">Mật khẩu mới:</label>
+      <input type="password" id="newPassword" name="newPassword">
+      <button id="savePasswordBtn">🔒 Đổi mật khẩu</button>
+      <button id="cancelPasswordBtn" type="button" onclick="hideForm('changePasswordForm')">❌ Hủy</button>
+    </form>
+
+    <form id="forgotPasswordForm" action="/forgot-password" method="post" style="display: none;">
+      <label for="forgotEmail">Email của bạn:</label>
+      <input type="email" id="forgotEmail" name="forgotEmail" th:value="${customer.email}">
+      <button id="resetPasswordBtn">📧 Gửi mật khẩu mới</button>
+      <button id="cancelForgotBtn" type="button" onclick="hideForm('forgotPasswordForm')">❌ Hủy</button>
+    </form>
+
+    <form action="/logout" method="post">
+      <button id="logoutBtn">🚪 Đăng xuất</button>
+    </form>
+  </div>
+
+  <script>
+    function showForm(formId) {
+      document.getElementById('userInfo').style.display = 'none';
+      document.getElementById('editForm').style.display = 'none';
+      document.getElementById('changePasswordForm').style.display = 'none';
+      document.getElementById('forgotPasswordForm').style.display = 'none';
+      document.getElementById(formId).style.display = 'block';
+    }
+
+    function hideForm(formId) {
+      document.getElementById(formId).style.display = 'none';
+      document.getElementById('userInfo').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

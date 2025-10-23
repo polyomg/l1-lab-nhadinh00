@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 8 - Spring Boot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .navbar {
+            background: #1976d2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-brand i {
+            font-size: 1.4rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px 30px 20px;
+        }
+
+        .hero h1 {
+            font-weight: 800;
+            color: #1565c0;
+        }
+
+        .hero p {
+            color: #616161;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 18px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            color: #757575;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-terminal-dash"></i> LAB 8 - Spring Boot
+        </a>
+        <div>
+            <a href="/auth/login" class="btn btn-outline-light me-2">
+                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+            </a>
+            <a href="/mail/form" class="btn btn-warning text-dark fw-bold">
+                <i class="bi bi-envelope-fill"></i> Gửi Mail
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <h1>Chào mừng bạn đến với Lab 8</h1>
+    <p>Ứng dụng Spring Boot gửi mail, xác thực và bảo mật.</p>
+</section>
+
+<!-- Cards -->
+<div class="container pb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center p-4">
+                <i class="bi bi-send-fill text-success"></i>
+                <h5 class="fw-bold text-success">Bài 1–3</h5>
+                <p>Gửi mail trực tiếp, gửi nền bằng hàng đợi và form gửi mail.</p>
+                <a href="/mail/form" class="btn btn-success">
+                    <i class="bi bi-envelope-paper"></i> Gửi Mail
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center p-4">
+                <i class="bi bi-person-lock text-primary"></i>
+                <h5 class="fw-bold text-primary">Bài 4</h5>
+                <p>Đăng nhập bằng tài khoản người dùng hoặc quản trị viên.</p>
+                <a href="/auth/login" class="btn btn-primary">
+                    <i class="bi bi-door-open"></i> Đăng nhập
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center p-4">
+                <i class="bi bi-shield-lock text-danger"></i>
+                <h5 class="fw-bold text-danger">Bài 5–6</h5>
+                <p>Kiểm tra bảo mật, phân quyền và ghi log truy cập hệ thống.</p>
+                <a href="/admin/home" class="btn btn-danger">
+                    <i class="bi bi-speedometer"></i> Trang quản trị
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <hr>
+    <p>© 2025 FPT Polytechnic | Lab 8 - Spring Boot </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

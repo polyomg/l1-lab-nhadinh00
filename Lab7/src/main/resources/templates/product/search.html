@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tìm kiếm sản phẩm theo giá</title>
+</head>
+<body>
+    <h2>Tìm kiếm sản phẩm theo khoảng giá</h2>
+
+	<form action="/product/search" method="get">
+	  <label>Giá từ:</label>
+	  <input type="number" name="min" step="0.01">
+	  <label>đến:</label>
+	  <input type="number" name="max" step="0.01">
+	  <button type="submit">Tìm kiếm</button>
+	</form>
+
+	<table border="1" style="width:100%">
+	  <tr>
+	    <th>ID</th>
+	    <th>Tên sản phẩm</th>
+	    <th>Giá</th>
+	    <th>Loại</th>
+	  </tr>
+	  <tr th:each="p : ${items}">
+	    <td th:text="${p.id}"></td>
+	    <td th:text="${p.name}"></td>
+	    <td th:text="${p.price}"></td>
+	    <td th:text="${p.category.name}"></td>
+	  </tr>
+	</table>
+</body>
+</html>

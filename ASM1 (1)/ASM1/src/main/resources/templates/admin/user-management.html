@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Quản lý người dùng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #444;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #555;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #555;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #555;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #toggleForm {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quản lý người dùng</h1>
+
+    <!-- Hiển thị thông báo lỗi -->
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- Nút chuyển đổi form chỉ hiển thị nếu là admin -->
+    <div th:if="${isAdmin}">
+        <button id="toggleForm">Chuyển đổi form</button>
+    </div>
+
+    <!-- Form khách hàng -->
+    <form id="customerForm" th:action="${customer != null ? '/users/customer/update' : '/users/customer'}" method="post">
+        <input type="hidden" name="maKH" th:if="${customer != null}" th:value="${customer.maKH}" />
+
+        <label for="ten">Tên:</label>
+        <input type="text" id="ten" name="ten" th:value="${customer != null ? customer.ten : ''}" required /><br />
+
+        <label for="gioiTinh">Giới tính:</label>
+        <select id="gioiTinh" name="gioiTinh">
+            <option value="true" th:selected="${customer != null && customer.gioiTinh}">Nam</option>
+            <option value="false" th:selected="${customer != null && !customer.gioiTinh}">Nữ</option>
+        </select><br />
+
+        <label for="ngaySinh">Ngày sinh:</label>
+        <input type="text" id="ngaySinh" name="ngaySinh" th:value="${customer != null ? customer.ngaySinh : ''}" required /><br />
+
+        <label for="sdt">Số điện thoại:</label>
+        <input type="text" id="sdt" name="sdt" th:value="${customer != null ? customer.sdt : ''}" required /><br />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" th:value="${customer != null ? customer.email : ''}" required /><br />
+
+        <label for="tenDN">Tên đăng nhập:</label>
+        <input type="text" id="tenDN" name="tenDN" th:value="${customer != null ? customer.tenDN : ''}" required /><br />
+
+        <label for="matKhau">Mật khẩu:</label>
+        <input type="password" id="matKhau" name="matKhau" th:value="${customer != null ? customer.matKhau : ''}" required /><br />
+
+        <label for="avatar">Avatar:</label>
+        <input type="text" id="avatar" name="avatar" th:value="${customer != null ? customer.avatar : ''}" /><br />
+
+        <button type="submit" class="btn btn-success" th:text="${customer != null ? 'Lưu' : 'Thêm'}"></button>
+        <button type="button" id="resetCustomerForm" class="btn btn-secondary">Làm mới</button>
+    </form>
+
+    <!-- Form nhân viên chỉ hiển thị nếu là admin -->
+    <form id="staffForm" th:action="${staff != null ? '/users/staff/update' : '/users/staff'}" method="post" th:if="${isAdmin}" style="display: none;">
+        <input type="hidden" name="maNV" th:if="${staff != null}" th:value="${staff.maNV}" />
+
+        <label for="tenNV">Tên:</label>
+        <input type="text" id="tenNV" name="tenNV" th:value="${staff != null ? staff.tenNV : ''}" required /><br />
+
+        <label for="gioiTinhNV">Giới tính:</label>
+        <select id="gioiTinhNV" name="gioiTinh">
+            <option value="true" th:selected="${staff != null && staff.gioiTinh}">Nam</option>
+            <option value="false" th:selected="${staff != null && !staff.gioiTinh}">Nữ</option>
+        </select><br />
+
+        <label for="ngaySinhNV">Ngày sinh:</label>
+        <input type="text" id="ngaySinhNV" name="ngaySinh" th:value="${staff != null ? staff.ngaySinh : ''}" required /><br />
+
+        <label for="emailNV">Email:</label>
+        <input type="email" id="emailNV" name="email" th:value="${staff != null ? staff.email : ''}" required /><br />
+
+        <label for="tenDNNV">Tên đăng nhập:</label>
+        <input type="text" id="tenDNNV" name="tenDN" th:value="${staff != null ? staff.tenDN : ''}" required /><br />
+
+        <label for="matKhauNV">Mật khẩu:</label>
+        <input type="password" id="matKhauNV" name="matKhau" th:value="${staff != null ? staff.matKhau : ''}" required /><br />
+
+        <label for="cccd">CCCD:</label>
+        <input type="text" id="cccd" name="cccd" th:value="${staff != null ? staff.cccd : ''}" required /><br />
+
+        <label for="avatarNV">Avatar:</label>
+        <input type="text" id="avatarNV" name="avatar" th:value="${staff != null ? staff.avatar : ''}" /><br />
+
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="true" th:selected="${staff != null && staff.role}">Admin</option>
+            <option value="false" th:selected="${staff != null && !staff.role}">Nhân viên</option>
+        </select><br />
+
+        <button type="submit" class="btn btn-success" th:text="${staff != null ? 'Lưu' : 'Thêm'}"></button>
+        <button type="button" id="resetStaffForm" class="btn btn-secondary">Làm mới</button>
+    </form>
+
+    <h2>Danh sách khách hàng</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Mã KH</th>
+            <th>Tên</th>
+            <th>Giới tính</th>
+            <th>Ngày sinh</th>
+            <th>SĐT</th>
+            <th>Email</th>
+            <th>Tên đăng nhập</th>
+            <th>Avatar</th>
+            <th>Ngày đăng ký</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="customer : ${customers}">
+            <td th:text="${customer.maKH}"></td>
+            <td th:text="${customer.ten}"></td>
+            <td th:text="${customer.gioiTinh ? 'Nam' : 'Nữ'}"></td>
+            <td th:text="${customer.ngaySinh}"></td>
+            <td th:text="${customer.sdt}"></td>
+            <td th:text="${customer.email}"></td>
+            <td th:text="${customer.tenDN}"></td>
+            <td th:text="${customer.avatar}"></td>
+            <td th:text="${#temporals.format(customer.ngayDangKy, 'dd/MM/yyyy HH:mm:ss')}"></td>
+            <td>
+                <a class="btn btn-primary btn-sm" data-form-type="customer" th:href="@{'/users/customer/edit/' + ${customer.maKH} + '?formType=customer'}">Sửa</a>
+                <a class="btn btn-danger btn-sm" th:href="@{'/users/customer/delete/' + ${customer.maKH}}">Xóa</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+    <!-- Bảng danh sách nhân viên chỉ hiển thị nếu là admin -->
+    <h2 th:if="${isAdmin}">Danh sách nhân viên</h2>
+    <table th:if="${isAdmin}">
+        <thead>
+            <tr>
+                <th>Mã NV</th>
+                <th>Tên</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th>Email</th>
+                <th>Tên đăng nhập</th>
+                <th>CCCD</th>
+                <th>Avatar</th>
+                <th>Role</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="staff : ${staffs}">
+                <td th:text="${staff.maNV}"></td>
+                <td th:text="${staff.tenNV}"></td>
+                <td th:text="${staff.gioiTinh ? 'Nam' : 'Nữ'}"></td>
+                <td th:text="${staff.ngaySinh}"></td>
+                <td th:text="${staff.email}"></td>
+                <td th:text="${staff.tenDN}"></td>
+                <td th:text="${staff.cccd}"></td>
+                <td th:text="${staff.avatar}"></td>
+                <td th:text="${staff.role ? 'Admin' : 'Nhân viên'}"></td>
+                <td>
+                    <a class="btn btn-primary btn-sm" data-form-type="staff" th:href="@{'/users/staff/edit/' + ${staff.maNV} + '?formType=staff'}">Sửa</a>
+                    <a class="btn btn-danger btn-sm" th:href="@{'/users/staff/delete/' + ${staff.maNV}}">Xóa</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Script xử lý chuyển đổi form -->
+    <script>
+        const customerForm = document.getElementById('customerForm');
+        const staffForm = document.getElementById('staffForm');
+        const toggleFormButton = document.getElementById('toggleForm');
+
+        if (toggleFormButton) {
+            toggleFormButton.addEventListener('click', () => {
+                if (customerForm.style.display === 'none') {
+                    customerForm.style.display = 'block';
+                    staffForm.style.display = 'none';
+                } else {
+                    customerForm.style.display = 'none';
+                    staffForm.style.display = 'block';
+                }
+            });
+        }
+
+        // Xử lý sự kiện click cho nút "Làm mới"
+        document.getElementById('resetCustomerForm').addEventListener('click', () => {
+            window.location.href = '/users'; // Chuyển hướng về trang /users
+        });
+
+        document.getElementById('resetStaffForm').addEventListener('click', () => {
+            window.location.href = '/users'; // Chuyển hướng về trang /users
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Loại Sản Phẩm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fdeef4, #fff);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.2);
+            padding: 40px 60px;
+            transition: 0.3s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: #ff69b4;
+            font-size: 36px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ffe0ec;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1.5px solid #ffd1dc;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #ff69b4;
+            box-shadow: 0 0 5px #ffb6c1;
+        }
+
+        button, .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        .btn-success {
+            background-color: #ff9ecd;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #ff6fa9;
+        }
+
+        .btn-secondary {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #bbb;
+        }
+
+        .btn-primary {
+            background-color: #ffa6c9;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff80b3;
+        }
+
+        .btn-danger {
+            background-color: #ff6b81;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e45772;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 20px rgba(255, 192, 203, 0.25);
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ffb6c1;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fff5f8;
+        }
+
+        tr:hover {
+            background-color: #ffe6ef;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            form, table {
+                font-size: 14px;
+            }
+
+            button, .btn {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🌸 Quản Lý Loại Sản Phẩm 🌸</h2>
+
+        <!-- Form Thêm/Sửa -->
+        <form th:action="@{/admin/loaisp/save}" method="post" th:object="${loaiSP}">
+            <div class="mb-3">
+                <label>Mã Loại:</label>
+                <input type="number" th:field="*{maLoai}" required>
+            </div>
+            <div class="mb-3">
+                <label>Tên Loại:</label>
+                <input type="text" th:field="*{tenLoai}" required>
+            </div> <br>
+            <button type="submit" class="btn btn-success">💾 Lưu</button>
+            <a href="/admin/loaisp" class="btn btn-secondary">❌ Hủy</a>
+        </form>
+
+        <!-- Bảng hiển thị loại sản phẩm -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã Loại</th>
+                    <th>Tên Loại</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="loaiSP : ${listLoaiSP}">
+                    <td th:text="${loaiSP.maLoai}"></td>
+                    <td th:text="${loaiSP.tenLoai}"></td>
+                    <td>
+                        <div class="action-buttons">
+                            <a th:href="@{/admin/loaisp/edit/{id}(id=${loaiSP.maLoai})}" class="btn btn-primary">✏️ Sửa</a>
+                            <a th:href="@{/admin/loaisp/delete/{id}(id=${loaiSP.maLoai})}" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">🗑️ Xóa</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
